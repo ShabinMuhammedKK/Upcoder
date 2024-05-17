@@ -1,6 +1,7 @@
 import express from "express";
 import { config } from "dotenv";
 import connectDB from "./frameworks/mongoose/dbConnection";
+import { userAuthRoute } from "./interfaces/routes/authUser";
 config();
 
 const app = express();
@@ -12,9 +13,8 @@ const start = async () => {
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
 
-    app.get("/users/login", (req, res) => {
-      res.status(200).send("hello user !!!");
-    });
+    //Routes
+    app.use("/auth/user", userAuthRoute);
 
     connectDB();
 

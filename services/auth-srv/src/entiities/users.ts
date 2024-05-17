@@ -1,8 +1,14 @@
-export interface UserEntiti {
+import { Payments } from "./payments";
+import { Enrollment } from "./enrollment";
+
+export interface UserEntity {
     _id:string;
     password:string;
+    confirmPassword:string;
     firstName:string;
     lastName:string;
+    userName:string;
+    phoneNumber:number;
     email:string;
     updatedAt:Date;
     isActive:boolean;
@@ -10,28 +16,4 @@ export interface UserEntiti {
     purchaseHistory:Payments[];
     createdAt:Date;
     enrollmentHistory:Enrollment[]
-}
-
-export interface Payments {
-    _id:string;
-    purchaseDate:Date;
-    transactionID:string;
-    price:number;
-    userID: string;
-    courceID:string;
-    paymentMethod:string;
-}
-
-export interface Enrollment {
-    _id:string;
-    userID:string;
-    enrollmentDate:Date;
-    courseID:string;
-    courseCompletion:completionStatus;
-    lastAccessedDate:Date;
-}
-
-export enum completionStatus {
-    incomplete = "incomplete",
-    complete = "complete"
 }
