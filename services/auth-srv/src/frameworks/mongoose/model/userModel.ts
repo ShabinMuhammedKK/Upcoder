@@ -1,7 +1,7 @@
 import mongoose, { mongo } from "mongoose";
-import { UserEntiti } from "../../../entiities/users";
+import { UserEntity } from "../../../entiities/users";
 
-const userSchema = new mongoose.Schema<UserEntiti>({
+const userSchema = new mongoose.Schema<UserEntity>({
   firstName: {
     type: String,
     required: true,

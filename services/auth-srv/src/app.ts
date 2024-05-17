@@ -1,7 +1,7 @@
 import express from "express";
 import { config } from "dotenv";
 import connectDB from "./frameworks/mongoose/dbConnection";
-import { userAuthRoute } from "./interfaces/routes/authUser";
+import { userAuthRoute } from "./config/routes/authUser";
 config();
 
 const app = express();
