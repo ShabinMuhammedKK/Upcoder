@@ -11,7 +11,7 @@ export class AuthController {
       const newUser = await this.registerUser.execute(requestedData);
       res.status(201).json(newUser);
     } catch (error) {
-      console.log(error);
+      res.status(400).send(error)
     }
   }
 }
