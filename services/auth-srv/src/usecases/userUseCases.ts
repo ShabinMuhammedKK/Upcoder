@@ -2,6 +2,7 @@ import { UserEntity } from "../entiities/users";
 import { userRepoInterf } from "../interfaces/userRepoInterf";
 import { userUseCaseInterf } from "../interfaces/userUseCaseInterf";
 import { UserRepository } from "../repositories/userRepositories";
+import { generateOtp } from "../utils/utilities";
 
 export class RegisterUser implements userUseCaseInterf<UserEntity, UserEntity> {
   constructor(private userRepository: userRepoInterf) {}
@@ -17,14 +18,34 @@ export class RegisterUser implements userUseCaseInterf<UserEntity, UserEntity> {
       if (existingUserByUsername !== null) {
         throw new Error("User with this username already exists");
       }
-  
-      // Creating the new user
-      const newUserCreated = await this.userRepository.createUser(user);
-      if(!newUserCreated){
-        throw new Error("Failed to create new user");
-        
+
+
+      let otp = generateOtp()
+      console.log(otp);
+
+      const storeInUsersDataStorage = await this.userRepository.createUsersData(user,otp)
+      if(!storeInUsersDataStorage){
+        console.log("usersStorage is not worked");
+        throw new Error("Failed to create new usersData");
       }
-      return newUserCreated;
+
+      //a prompt will show to input the 
+      const enteredOTP = 123456;
+
+      if(enteredOTP === otp){
+
+        const createNewUser = await this.userRepository.createUser(user);
+            if(createNewUser){
+              console.log("new user is created");
+              return createNewUser;
+            }else{
+              throw new Error("new user creation error")
+            }
+      }else{
+        console.log("entered otp is not correct");
+      }
+      
+      return storeInUsersDataStorage;
     } catch (error) {
       console.error("Error during user registration:", error);
       throw error;
