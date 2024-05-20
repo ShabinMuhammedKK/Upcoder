@@ -20,7 +20,7 @@ const mailSender = async (email:string,title:string,body:string)=>{
         });
 
         let info = await transporter.sendMail({
-            from:'shabin.example.com - upcoder',
+            from:'upcoder education',
             to:email,
             subject:title,
             html:body
@@ -40,7 +40,7 @@ async function sendVerificationMail(email:string,otp:number) {
              <p>Here is your OTP code: ${otp}</p>`
 
         );
-        console.log("email sent successfully: ",mailResponse)
+        console.log("email sent successfully")
     } catch (error) {
         throw error;
     }

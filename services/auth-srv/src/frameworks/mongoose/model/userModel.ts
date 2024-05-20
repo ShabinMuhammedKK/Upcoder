@@ -31,11 +31,6 @@ const userSchema = new mongoose.Schema<UserEntity>({
     required: true,
     minlength: 6,
   },
-  confirmPassword: {
-    type: String,
-    required: true,
-    minlength: 6,
-  },
 },{
   timestamps:true,
 });
