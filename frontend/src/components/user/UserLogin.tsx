@@ -7,7 +7,7 @@ import { HomeProps } from "../../utils/reduxtDataStoring";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch } from "react-redux";
 
-const useDecodedToken = (accessToken: string) => {
+export const useDecodedToken = (accessToken: string) => {
   const decodedToken = jwtDecode<HomeProps>(accessToken);
   return decodedToken as HomeProps;
 };

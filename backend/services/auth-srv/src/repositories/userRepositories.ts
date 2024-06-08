@@ -109,10 +109,8 @@ export class UserRepository implements userRepoInterf {
   }
   async getOtpFromUsersData(user: UserEntity): Promise<number | null> {
     try {
-      
       const userData = await this.findUserByEmailOrUsername(user.email);
       if (userData) {
-        
         return userData.otp; // Return the stored OTP
       } else {
         throw new Error("User not found");
@@ -131,28 +129,56 @@ export class UserRepository implements userRepoInterf {
       throw error;
     }
   }
-  async updateUser(userData: UserEntity): Promise<boolean> {
+  async updateUser(userData: UserEntity): Promise<boolean | UserEntity> {
     try {
       const findExitingUser = await User.findOneAndUpdate(
         {
           email: userData.email,
         },
-        { $set: {
-          firstName: userData.firstName,
-        lastName: userData.lastName,
-        userName: userData.userName,
-        phoneNumber: userData.phoneNumber,
-        email: userData.email,
-        } }
+        {
+          $set: {
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            userName: userData.userName,
+            phoneNumber: userData.phoneNumber,
+            email: userData.email,
+          },
+        },
+        {
+          new: true,
+        }
       );
 
-      if(findExitingUser){
-        return true;
+      if (findExitingUser) {
+        return findExitingUser;
       }
-      return false
+      return false;
     } catch (error) {
       console.log(error);
-      throw error
+      throw error;
+    }
+  }
+  async updateUserImage(
+    userEmail: string,
+    liveLink: string
+  ): Promise<boolean | UserEntity> {
+    try {
+      const urlRegex = /https?:\/\/[^\s]+/;
+      const match = liveLink.match(urlRegex);
+      const sanitizedOutput = match ? match[0] : "";
+
+      const isUpdated = await User.findOneAndUpdate(
+        { email: userEmail },
+        { $set: { profilePic: sanitizedOutput } },
+        { new: true }
+      );
+
+      if (isUpdated) {
+        return isUpdated;
+      }
+      return false;
+    } catch (error) {
+      return false;
     }
   }
 }

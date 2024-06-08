@@ -3,6 +3,7 @@ import { AuthController } from "../../controllers/userController";
 import {CreateUsersData } from "../../usecases/userUseCases";
 import { UserRepository } from "../../repositories/userRepositories";
 import { authenticateToken } from "../../frameworks/express/middlewares/authMiddlewares";
+import { upload, uploadCloudinary } from "../../utils/utilities";
 
 
 const route = Router();
@@ -18,6 +19,7 @@ route.post("/login",(req,res)=>authController.login(req,res));
 route.post("/refreshtoken",(req,res)=>authController.refreshToken);
 route.post("/storedata",(req,res)=>authController.dataToRedux(req,res));
 route.post("/getUser",(req,res)=>authController.getUserDatas(req,res));
-route.post("/updateuser",authenticateToken,(req,res)=>authController.updateUser(req,res));
+route.post("/updateuser",(req,res)=>authController.updateUser(req,res));
+route.post('/upload', upload.single('file'), (req, res) =>authController.uploadProfilePicture(req,res));
 
 export { route as userAuthRoute };

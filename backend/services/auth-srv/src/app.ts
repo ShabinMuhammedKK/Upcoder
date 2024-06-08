@@ -1,5 +1,5 @@
 import express from "express";
-import cookieParser from 'cookie-parser';
+import cookieParser from "cookie-parser";
 import { config } from "dotenv";
 import connectDB from "./frameworks/mongoose/dbConnection";
 import { userAuthRoute } from "./config/routes/userRouter";
@@ -24,9 +24,12 @@ const start = async () => {
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
 
+    app.use(express.static(__dirname + "/public"));
+    app.use("/uploads", express.static("uploads"));
+
     //Routes
     app.use("/auth/user", userAuthRoute);
-    app.use("/auth/admin",adminAuthRoute)
+    app.use("/auth/admin", adminAuthRoute);
 
     connectDB();
 

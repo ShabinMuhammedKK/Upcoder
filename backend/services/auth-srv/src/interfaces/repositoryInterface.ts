@@ -7,7 +7,8 @@ export interface userRepoInterf {
     findByEmail(email:string):Promise<UserEntity | null>;
     findByUsername(userName:string):Promise<UserEntity | null>;
     createUsersData(user:UserEntity,otp:number):Promise<UserEntity>
-    updateUser(userData:UserEntity):Promise<boolean>
+    updateUser(userData:UserEntity):Promise<boolean | UserEntity>
+    updateUserImage(userEmail:string,liveLink:string):Promise<boolean | UserEntity>
 }
 
 export interface adminRepoInterf{

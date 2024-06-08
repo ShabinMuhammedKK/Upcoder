@@ -20,13 +20,13 @@ interface CustomJwtPayload extends JwtPayload {
 
 
 export class AuthController {
-  constructor(private registerUser: CreateUsersData) {}
+  constructor(private userUseCases: CreateUsersData) {}
 
   async createUserStorageData(req: Request, res: Response): Promise<void> {
     const requestedData: UserEntity = req.body;
 
     try {
-      const newUser = await this.registerUser.execute(requestedData);
+      const newUser = await this.userUseCases.execute(requestedData);
       res.status(201).json(newUser);
     } catch (error) {
       res.status(400).send(error)
@@ -38,7 +38,7 @@ export class AuthController {
 
 console.log(otp)
     try {
-      const newUser = await this.registerUser.registerNewUser(formData,otp);
+      const newUser = await this.userUseCases.registerNewUser(formData,otp);
       res.status(201).json(newUser);
     } catch (error) {
       res.status(400).send(error)
@@ -48,7 +48,7 @@ console.log(otp)
     const loginData:UserEntity = req.body;
 
     try {
-      const isAuthenticated = await this.registerUser.loginUser(loginData);
+      const isAuthenticated = await this.userUseCases.loginUser(loginData);
   
       if (!isAuthenticated) {
         res.status(401).json({ message: 'Login failed' });
@@ -95,7 +95,7 @@ console.log(otp)
     const reqData = req.body
 
     try {
-      const userData = await this.registerUser.authenticatedUser(reqData);
+      const userData = await this.userUseCases.authenticatedUser(reqData);
       if(userData){
         res.send(userData)
       }
@@ -103,12 +103,17 @@ console.log(otp)
       res.send(error)
     }
   }
-  async updateUser(req:Request,res:Response):Promise<boolean>{
+  async updateUser(req:Request,res:Response):Promise<void>{
     
     const userData = req.body;
     try {
-      const isUserUpdated = await this.registerUser.editUserProfile(userData);
-      return isUserUpdated;
+      const isUserUpdated = await this.userUseCases.editUserProfile(userData);
+      if(isUserUpdated){
+        res.status(200).json({ success: true, data: isUserUpdated });
+      }else{
+        res.status(500).send("error")
+      }
+      
     } catch (error) {
       throw error;
     }
@@ -116,7 +121,7 @@ console.log(otp)
   async getUserDatas(req: Request, res: Response): Promise<void> {
     const useremail = req.body.email;
     try {
-      const userData = await this.registerUser.getUserProfileData(useremail);
+      const userData = await this.userUseCases.getUserProfileData(useremail);
       if (userData !== null) {
         res.status(200).json({ success: true, data: userData });
       } else {
@@ -125,6 +130,21 @@ console.log(otp)
     } catch (error) {
       console.error('Error getting user data:', error);
       res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+  }
+  async uploadProfilePicture(req:Request,res:Response):Promise<void>{
+    try {
+      const userEmail = JSON.parse(req.body.decodedToken);
+      const filePath = req.file?.path
+      if(userEmail && filePath){
+        const saveToCloudinaryAndUserProfile = await this.userUseCases.uploadProfilePicture(userEmail,filePath)
+        res.status(200).json({ success: true, data: saveToCloudinaryAndUserProfile });
+      }else{
+        res.status(404).json({ success: false, message: 'User not found' });
+      }
+      
+    } catch (error) {
+      throw error;
     }
   }
   

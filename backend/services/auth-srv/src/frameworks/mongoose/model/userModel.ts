@@ -26,6 +26,10 @@ const userSchema = new mongoose.Schema<UserEntity>({
     required:true,
     minlength:10,
   },
+  profilePic:{
+    type:String,
+    default:"",
+  },
   password: {
     type: String,
     required: true,
