@@ -5,6 +5,12 @@ import { v2 as cloudinary } from "cloudinary";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
+import { UserEntity } from "../entiities/users";
+
+interface EmailUserData {
+  name: string;
+  link: string;
+}
 
 //generate otp
 const generateOtp = () => {
@@ -35,6 +41,36 @@ const mailSender = async (email: string, title: string, body: string) => {
   }
 };
 
+
+const passwordResetMailSender = async (email: string, name: string, link: string) => {
+  try {
+    let transporter = nodemailer.createTransport({
+      host: process.env.MAIL_HOST,
+      service: "gmail",
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS,
+      },
+    });
+
+    let info = await transporter.sendMail({
+      from: '"UpCoder Education" <no-reply@upcoder.com>', // Sender address
+      to: email,
+      subject: "Password Reset Request", // Subject line
+      html: `<h1>Hi ${name},</h1>
+             <p>Please reset your password by clicking the link below:</p>
+             <a href="${link}">Reset Password</a>` // HTML body
+    });
+
+    console.log("Email sent successfully:", info.messageId);
+  } catch (error) {
+    console.error("Error sending email:", error);
+    throw error;
+  }
+};
+
 // send otp by email
 async function sendVerificationMail(email: string, otp: number) {
   try {
@@ -49,6 +85,7 @@ async function sendVerificationMail(email: string, otp: number) {
     throw error;
   }
 }
+
 
 //cloudinary config
 
@@ -66,7 +103,6 @@ const uploadCloudinary = async (imagePath: string) => {
     const imageTag = await createImageTag(public_id);
     if (!imageTag) {
       return null;
-      
     }
     return imageTag;
   } catch (error) {
@@ -113,4 +149,10 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-export { sendVerificationMail, generateOtp, uploadCloudinary, upload };
+export {
+  sendVerificationMail,
+  generateOtp,
+  uploadCloudinary,
+  upload,
+  passwordResetMailSender,
+};

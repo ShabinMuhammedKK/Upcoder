@@ -2,7 +2,8 @@ import { Payments } from "./payments";
 import { Enrollment } from "./enrollment";
 
 export interface UserEntity {
-    id: any;
+    name: string;
+    id: string;
     user: UserEntity;
     _id?:string;
     userID?:string;
@@ -23,4 +24,6 @@ export interface UserEntity {
     createdAt?:Date;
     enrollmentHistory:Enrollment[];
     status:boolean;
+    token:string;
+    link:string;
 }

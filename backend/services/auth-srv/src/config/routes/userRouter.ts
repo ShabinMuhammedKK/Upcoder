@@ -21,5 +21,6 @@ route.post("/storedata",(req,res)=>authController.dataToRedux(req,res));
 route.post("/getUser",(req,res)=>authController.getUserDatas(req,res));
 route.post("/updateuser",(req,res)=>authController.updateUser(req,res));
 route.post('/upload', upload.single('file'), (req, res) =>authController.uploadProfilePicture(req,res));
+route.post("/resetemail",(req,res)=>authController.resetigPassword(req,res));
 
 export { route as userAuthRoute };

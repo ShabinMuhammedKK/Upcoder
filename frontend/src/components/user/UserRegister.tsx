@@ -68,7 +68,7 @@ const UserRegister :React.FC = () => {
     if (!formData.password.trim()) {
       newErrors.password = "Password is required";
     } else if (formData.password.trim().length < 6) {
-      newErrors.password = "Password must be at least 8 characters long";
+      newErrors.password = "Password must be at least 6 characters long";
     }
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match";

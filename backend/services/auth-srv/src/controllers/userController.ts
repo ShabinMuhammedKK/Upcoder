@@ -147,6 +147,20 @@ console.log(otp)
       throw error;
     }
   }
+  async resetigPassword(req:Request,res:Response):Promise<void>{
+    try {
+      const userEmail = req.body
+      const savedToken = await this.userUseCases.createtoken(userEmail.email);
+      if(savedToken){
+        res.status(200).json({success:true,data:savedToken});
+      }else{
+        res.status(400).json({success:false,nessage:"token creation failed"})
+      }
+      
+    } catch (error) {
+      res.status(400).json({success:false});
+    }
+  }
   
 
 }

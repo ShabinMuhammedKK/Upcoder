@@ -101,6 +101,12 @@ const UserLogin: React.FC = () => {
           />
           {passwordError && <p className="text-red-500">{passwordError}</p>}
         </div>
+        <div className="flex flex-row justify-end">
+          <Link to="/user/forgotpassword">
+        <h1 className="text-blue-800">forgot passoword ?</h1>
+        </Link>
+        </div>
+        
         <div className="flex justify-center">
           <h1>Or</h1>
         </div>

@@ -6,6 +6,7 @@ export interface userUseCaseInterf <TRequest,TResponse>{
     authenticatedUser(request:TRequest):Promise<TResponse | null>;
     editUserProfile(Request:TRequest):Promise<boolean | UserEntity>;
     uploadProfilePicture(userEmail:string,filePath:string):Promise<boolean | UserEntity>
+    createtoken(userEmail:string):Promise<string | UserEntity>
 }
 export interface adminUseCaseInterface<TRequest,TResponse>{
     adminLogin(adminData:AdminEntity):Promise<AdminEntity>;

@@ -5,10 +5,16 @@ import UserStorage from "../frameworks/mongoose/model/usersDataStorage";
 import { userRepoInterf } from "../interfaces/repositoryInterface";
 import { userUseCaseInterf } from "../interfaces/usecaseInterface";
 import { UserRepository } from "../repositories/userRepositories";
-import { generateOtp, uploadCloudinary } from "../utils/utilities";
+import {
+  generateOtp,
+  passwordResetMailSender,
+  uploadCloudinary,
+} from "../utils/utilities";
 import dotenv from "dotenv";
 dotenv.config();
 import jwt from "jsonwebtoken";
+import Token from "../frameworks/mongoose/model/resetTokenModel";
+import crypto from "crypto";
 
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
@@ -130,7 +136,6 @@ export class CreateUsersData
       const isUserExists = await this.userRepository.updateUser(userData);
       if (isUserExists) {
         return isUserExists;
-        
       }
       throw new Error("user not updated");
     } catch (error) {
@@ -149,24 +154,53 @@ export class CreateUsersData
       throw error;
     }
   }
-  async uploadProfilePicture(userEmail:string,filePath:string):Promise<boolean | UserEntity>{
+  async uploadProfilePicture(
+    userEmail: string,
+    filePath: string
+  ): Promise<boolean | UserEntity> {
     try {
-      
-      const imageLiveLink = await  uploadCloudinary(filePath);
-      if(!imageLiveLink){
-        throw new Error("cloudinary error")
+      const imageLiveLink = await uploadCloudinary(filePath);
+      if (!imageLiveLink) {
+        throw new Error("cloudinary error");
       }
-      if(imageLiveLink){
-        const updatedUserProfile = await this.userRepository.updateUserImage(userEmail,imageLiveLink);
-        if(updatedUserProfile){
+      if (imageLiveLink) {
+        const updatedUserProfile = await this.userRepository.updateUserImage(
+          userEmail,
+          imageLiveLink
+        );
+        if (updatedUserProfile) {
           return true;
         }
-        return false
+        return false;
       }
-      
-      return false
+
+      return false;
     } catch (error) {
-      return false
+      return false;
+    }
+  }
+  async createtoken(userEmail: string): Promise<string | UserEntity> {
+    try {
+      const isExistingUser = await User.findOne({ email:userEmail });
+      if (!isExistingUser) {
+        throw new Error("user doest exists");
+      }
+      const token = await Token.findOne({ userID: isExistingUser._id });
+      if (token) await Token.deleteOne();
+      let resetToken = crypto.randomBytes(32).toString("hex");
+      const hash = await bcrypt.hash(resetToken, 10);
+
+      await new Token({
+        userID: isExistingUser._id,
+        token: hash,
+        createdAt: Date.now(),
+      }).save();
+
+      const link = `http://localhost:5173/user/passwordreset?token=${resetToken}&id=${isExistingUser._id}`;
+      await passwordResetMailSender(isExistingUser.email, isExistingUser.firstName, link);
+      return link;
+    } catch (error) {
+      throw error;
     }
   }
 }

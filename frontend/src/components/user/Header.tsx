@@ -7,7 +7,7 @@ import { UserType } from "../../store/datas/userDataSlice";
 const Header: React.FC = () => {
   
   const userData: UserType = useAppSelector((state) => state.user);
-  // console.log(userData)
+
 
   const [isOpen, setIsOpen] = useState(false);
 
