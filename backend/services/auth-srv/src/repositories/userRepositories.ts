@@ -1,4 +1,5 @@
 import { UserEntity } from "../entiities/users";
+import Token from "../frameworks/mongoose/model/resetTokenModel";
 import User from "../frameworks/mongoose/model/userModel";
 import UserStorage from "../frameworks/mongoose/model/usersDataStorage";
 import { userRepoInterf } from "../interfaces/repositoryInterface";
@@ -179,6 +180,34 @@ export class UserRepository implements userRepoInterf {
       return false;
     } catch (error) {
       return false;
+    }
+  }
+  async setNewPassword(userData: UserEntity): Promise<UserEntity | boolean> {
+    try {
+      const { token, userID, newPassword } = userData;
+      const passwordResetToken = await Token.findOne({ userID });
+      if (!passwordResetToken) {
+        throw new Error("Invalid or expired password reset token");
+      }
+      const isValid = await bcrypt.compare(token, passwordResetToken.token);
+      if (!isValid) {
+        throw new Error("Invalid or expired password reset token");
+      }
+
+      const hash = await bcrypt.hash(newPassword, 10);
+
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: userID },
+        { $set: { password: hash } },
+        { new: true }
+      );
+
+      if(updatedUser){
+        return updatedUser
+      }
+      return false
+    } catch (error) {
+      throw error;
     }
   }
 }

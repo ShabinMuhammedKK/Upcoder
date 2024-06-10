@@ -9,6 +9,7 @@ export interface userRepoInterf {
     createUsersData(user:UserEntity,otp:number):Promise<UserEntity>
     updateUser(userData:UserEntity):Promise<boolean | UserEntity>
     updateUserImage(userEmail:string,liveLink:string):Promise<boolean | UserEntity>
+    setNewPassword(userData:UserEntity):Promise<UserEntity | boolean>
 }
 
 export interface adminRepoInterf{

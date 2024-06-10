@@ -203,4 +203,13 @@ export class CreateUsersData
       throw error;
     }
   }
+  async newPassword(userNewDatas:UserEntity):Promise<boolean | UserEntity>{
+    try {
+      const isUserUpdated = await this.userRepository.setNewPassword(userNewDatas)
+    return isUserUpdated;
+  } catch (error) {
+    console.error("Error setting new password:", error);
+    throw new Error("Failed to set new password"); 
+  }
+  }
 }

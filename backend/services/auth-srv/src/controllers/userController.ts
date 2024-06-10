@@ -161,6 +161,18 @@ console.log(otp)
       res.status(400).json({success:false});
     }
   }
+  async newPasswordSetting(req: Request, res: Response): Promise<void> {
+    try {
+      const isPasswordChanged = await this.userUseCases.newPassword(req.body);
+      if (isPasswordChanged) {
+        res.status(200).json({ success: true });
+      } else {
+        res.status(400).json({ success: false });
+      }
+    } catch (error) {
+      res.status(500).json({ success: false, error: "Password resetting error" });
+    }
+  }
   
 
 }

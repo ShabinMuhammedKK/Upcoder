@@ -26,4 +26,5 @@ export interface UserEntity {
     status:boolean;
     token:string;
     link:string;
+    newPassword:string;
 }
