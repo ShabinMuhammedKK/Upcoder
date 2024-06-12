@@ -9,9 +9,8 @@ import { upload, uploadCloudinary } from "../../utils/utilities";
 const route = Router();
 
 const userRepository = new UserRepository();
-const registerUser = new CreateUsersData(userRepository);
-
-const authController = new AuthController(registerUser);
+const createUsersData = new CreateUsersData(userRepository);
+const authController = new AuthController(createUsersData);
 
 route.post("/register", (req, res) => authController.createUserStorageData(req, res));
 route.post("/verifyOTP", (req, res) => authController.register(req, res));

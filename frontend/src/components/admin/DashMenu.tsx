@@ -21,7 +21,12 @@ const DashMenu:React.FC<DashMenuProps> = ({isMenu, handleMenuShow})=> {
             </li>
             <li>
             <Link to="/admin/usermanagement">
-            <div className="dashNavs">User Management</div>
+            <div className="dashNavs">User management</div>
+            </Link>
+            </li>
+            <li>
+            <Link to="/admin/coursemanagement">
+            <div className="dashNavs">Course management</div>
             </Link>
             </li>
           </ul>

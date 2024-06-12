@@ -36,7 +36,6 @@ export class AuthController {
     const formData: UserEntity = req.body.user;
     const otp: number = req.body.otp;
 
-console.log(otp)
     try {
       const newUser = await this.userUseCases.registerNewUser(formData,otp);
       res.status(201).json(newUser);
