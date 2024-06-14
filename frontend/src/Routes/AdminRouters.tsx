@@ -3,6 +3,7 @@ import Login from "../pages/adminPages/Login"
 import UserMangement from "../pages/adminPages/UserManagement";
 import { Dashboard } from "../pages/adminPages/Dashboard";
 import CourseManagement from "../pages/adminPages/CourseManagement";
+import CourseDetailPage from "../pages/adminPages/CourseDetailPage";
 
 
 const AdminRouters = () => {
@@ -12,6 +13,7 @@ const AdminRouters = () => {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="usermanagement" element={<UserMangement />} />
           <Route path="coursemanagement" element={<CourseManagement />} />
+          <Route path="coursedetails" element={<CourseDetailPage />} />
         </Routes>
       )
 }

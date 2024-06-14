@@ -16,3 +16,11 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
+    - image: shabinmuhd/course
+      context: ./services/course-srv
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
